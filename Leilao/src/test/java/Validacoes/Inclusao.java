@@ -24,20 +24,19 @@ import java.util.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 //Lauro H.S Freitas
-//Exemplo de automação de dois cenários - Login Válido e Inválido
+//Exemplo cenário de inclusão de um novo leilao
  
-public class Login {
+public class Inclusao {
 
 	
 	
   private WebDriver driver;
   private static final String URL_LOGIN= "http://localhost:8080/login";
-  private static final String URL_ERRORLOGIN= "http://localhost:8080/login?error";
   private static final String URL_PGINICIAL= "http://localhost:8080/leiloes";
   
   private static String Usuario;
   private static String Senha;
-	 
+   
   
   @Before
   public void setUp() {
@@ -46,10 +45,10 @@ public class Login {
   }
   @After
   public void Exit() {
-  driver.close();
+ 
   }
 
-  @Test
+  @Test //Login
   public void LoginValido() {
   setUsuario("fulano");
   setSenha("pass");
@@ -60,21 +59,20 @@ public class Login {
   driver.findElement(By.id("Login-form")).submit();
   Assert.assertFalse(driver.getCurrentUrl().equals(URL_LOGIN));
   Assert.assertTrue(driver.getCurrentUrl().equals(URL_PGINICIAL));
-  
+  NovoLeilao(5);
   }
   
-  @Test
-  public void LoginInvalido() {
-  setUsuario("afulano");
-  setSenha("apass");
-  driver.navigate().to("http://localhost:8080/leiloes");
-  driver.findElement(By.className("text-light")).click();
-  driver.findElement(By.name("username")).sendKeys(Usuario);
-  driver.findElement(By.name("password")).sendKeys(Senha);
-  driver.findElement(By.id("Login-form")).submit();
-  Assert.assertFalse(driver.getCurrentUrl().equals(URL_LOGIN));
-  Assert.assertTrue(driver.getCurrentUrl().equals(URL_ERRORLOGIN));
   
+  public void NovoLeilao(int q) {
+
+	  for (int i = 0; i < q; i++) {
+		  driver.findElement(By.id("novo_leilao_link")).click();
+		  driver.findElement(By.id("nome")).sendKeys("Leilao"+i);
+		  driver.findElement(By.id("valorInicial")).sendKeys("200"+i);
+		  driver.findElement(By.id("dataAbertura")).sendKeys("30/12/2022");
+		  driver.findElement(By.id("button-submit")).click();
+		}
+ 
   }
    
   
